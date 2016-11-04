@@ -2,16 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://rory.cc/blog/blog/2016/11/01/test/</loc>
+    <loc>http://yoursite.com/code/index.html</loc>
     
-    <lastmod>2016-11-01T12:15:05.000Z</lastmod>
+    <lastmod>2016-11-02T15:17:23.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://rory.cc/blog/blog/2016/11/01/hello-world/</loc>
+    <loc>http://yoursite.com/music/index.html</loc>
+    
+    <lastmod>2016-11-02T15:14:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/blog/2016/11/01/the-problem-with-applecareplus/</loc>
+    
+    <lastmod>2016-11-02T10:11:12.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/blog/2016/11/01/hello-world/</loc>
     
     <lastmod>2016-11-01T12:12:02.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/misc/particlesjs-config.json</loc>
+    
+    <lastmod>2016-10-31T16:36:02.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/js/jquery.js</loc>
+    
+    <lastmod>2016-10-07T14:50:16.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/js/typed.min.js</loc>
+    
+    <lastmod>2016-09-09T02:37:50.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/js/particles.js</loc>
+    
+    <lastmod>2015-09-20T10:53:10.000Z</lastmod>
     
   </url>
   
