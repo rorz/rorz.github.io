@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://rory.cc/css/index-style.css</loc>
+    <loc>http://rory.cc/js/jquery-dev.js</loc>
     
-    <lastmod>2016-11-07T12:23:10.000Z</lastmod>
+    <lastmod>2016-11-07T12:37:26.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://rory.cc/js/jquery.js</loc>
+    
+    <lastmod>2016-11-07T12:28:51.000Z</lastmod>
     
   </url>
   
@@ -51,9 +58,9 @@
   </url>
   
   <url>
-    <loc>http://rory.cc/js/jquery.js</loc>
+    <loc>http://rory.cc/css/bulma/CHANGELOG.html</loc>
     
-    <lastmod>2016-10-07T14:50:16.000Z</lastmod>
+    <lastmod>2016-09-25T16:45:17.000Z</lastmod>
     
   </url>
   
@@ -65,30 +72,9 @@
   </url>
   
   <url>
-    <loc>http://rory.cc/css/bulma/CHANGELOG.html</loc>
-    
-    <lastmod>2016-09-25T16:45:17.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://rory.cc/css/bulma/README.html</loc>
     
     <lastmod>2016-09-24T17:16:54.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://rory.cc/js/typed.min.js</loc>
-    
-    <lastmod>2016-09-09T02:37:50.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://rory.cc/js/particles.js</loc>
-    
-    <lastmod>2015-09-20T10:53:10.000Z</lastmod>
     
   </url>
   

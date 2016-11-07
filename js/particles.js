@@ -531,10 +531,42 @@ var pJS = function(tag_id, params){
           if(p.opacity >= pJS.particles.opacity.value) p.opacity_status = false;
           p.opacity += p.vo;
         }else {
-          if(p.opacity <= pjs.particles.opacity.anim.opacity_min)="" p.opacity_status="true;" p.opacity="" -="p.vo;" }="" if(p.opacity="" <="" 0)="" *="" change="" size="" if(pjs.particles.size.anim.enable){="" if(p.size_status="=" true){="" if(p.radius="">= pJS.particles.size.value) p.size_status = false;
+          if(p.opacity <= pJS.particles.opacity.anim.opacity_min) p.opacity_status = true;
+          p.opacity -= p.vo;
+        }
+        if(p.opacity < 0) p.opacity = 0;
+      }
+
+      /* change size */
+      if(pJS.particles.size.anim.enable){
+        if(p.size_status == true){
+          if(p.radius >= pJS.particles.size.value) p.size_status = false;
           p.radius += p.vs;
         }else{
-          if(p.radius <= pjs.particles.size.anim.size_min)="" p.size_status="true;" p.radius="" -="p.vs;" }="" if(p.radius="" <="" 0)="" *="" change="" particle="" position="" if="" it="" is="" out="" of="" canvas="" if(pjs.particles.move.out_mode="=" 'bounce'){="" var="" new_pos="{" x_left:="" p.radius,="" x_right:="" pjs.canvas.w,="" y_top:="" y_bottom:="" pjs.canvas.h="" }else{="" -p.radius,="" pjs.canvas.w="" +="" if(p.x=""> pJS.canvas.w){
+          if(p.radius <= pJS.particles.size.anim.size_min) p.size_status = true;
+          p.radius -= p.vs;
+        }
+        if(p.radius < 0) p.radius = 0;
+      }
+
+      /* change particle position if it is out of canvas */
+      if(pJS.particles.move.out_mode == 'bounce'){
+        var new_pos = {
+          x_left: p.radius,
+          x_right:  pJS.canvas.w,
+          y_top: p.radius,
+          y_bottom: pJS.canvas.h
+        }
+      }else{
+        var new_pos = {
+          x_left: -p.radius,
+          x_right: pJS.canvas.w + p.radius,
+          y_top: -p.radius,
+          y_bottom: pJS.canvas.h + p.radius
+        }
+      }
+
+      if(p.x - p.radius > pJS.canvas.w){
         p.x = new_pos.x_left;
         p.y = Math.random() * pJS.canvas.h;
       }
@@ -648,7 +680,11 @@ var pJS = function(tag_id, params){
         dist = Math.sqrt(dx*dx + dy*dy);
 
     /* draw a line between p1 and p2 if the distance between them is under the config distance */
-    if(dist <= pjs.particles.line_linked.distance){="" var="" opacity_line="pJS.particles.line_linked.opacity" -="" (dist="" (1="" pjs.particles.line_linked.opacity))="" pjs.particles.line_linked.distance;="" if(opacity_line=""> 0){        
+    if(dist <= pJS.particles.line_linked.distance){
+
+      var opacity_line = pJS.particles.line_linked.opacity - (dist / (1/pJS.particles.line_linked.opacity)) / pJS.particles.line_linked.distance;
+
+      if(opacity_line > 0){        
         
         /* style */
         var color_line = pJS.particles.line_linked.color_rgb_line;
@@ -677,7 +713,98 @@ var pJS = function(tag_id, params){
         dy = p1.y - p2.y,
         dist = Math.sqrt(dx*dx + dy*dy);
 
-    if(dist <= pjs.particles.line_linked.distance){="" var="" ax="dx/(pJS.particles.move.attract.rotateX*1000)," ay="dy/(pJS.particles.move.attract.rotateY*1000);" p1.vx="" -="ax;" p1.vy="" p2.vx="" +="ax;" p2.vy="" }="" pjs.fn.interact.bounceparticles="function(p1," p2){="" dx="p1.x" p2.x,="" dy="p1.y" p2.y,="" dist="Math.sqrt(dx*dx" dy*dy),="" dist_p="p1.radius+p2.radius;" if(dist="" <="dist_p){" *="" ----------="" pjs="" functions="" modes="" events="" ------------="" pjs.fn.modes.pushparticles="function(nb," pos){="" pjs.tmp.pushing="true;" for(var="" i="0;" nb;="" i++){="" pjs.particles.array.push(="" new="" pjs.fn.particle(="" pjs.particles.color,="" pjs.particles.opacity.value,="" {="" 'x':="" pos="" ?="" pos.pos_x="" :="" math.random()="" pjs.canvas.w,="" 'y':="" pos.pos_y="" pjs.canvas.h="" )="" if(i="=" nb-1){="" if(!pjs.particles.move.enable){="" pjs.fn.particlesdraw();="" };="" pjs.fn.modes.removeparticles="function(nb){" pjs.particles.array.splice(0,="" nb);="" pjs.fn.modes.bubbleparticle="function(p){" on="" hover="" event="" if(pjs.interactivity.events.onhover.enable="" &&="" isinarray('bubble',="" pjs.interactivity.events.onhover.mode)){="" dx_mouse="p.x" pjs.interactivity.mouse.pos_x,="" dy_mouse="p.y" pjs.interactivity.mouse.pos_y,="" dist_mouse="Math.sqrt(dx_mouse*dx_mouse" dy_mouse*dy_mouse),="" ratio="1" pjs.interactivity.modes.bubble.distance;="" function="" init(){="" p.opacity_bubble="p.opacity;" p.radius_bubble="p.radius;" mousemove="" check="" if(dist_mouse="" if(ratio="">= 0 && pJS.interactivity.status == 'mousemove'){
+    if(dist <= pJS.particles.line_linked.distance){
+
+      var ax = dx/(pJS.particles.move.attract.rotateX*1000),
+          ay = dy/(pJS.particles.move.attract.rotateY*1000);
+
+      p1.vx -= ax;
+      p1.vy -= ay;
+
+      p2.vx += ax;
+      p2.vy += ay;
+
+    }
+    
+
+  }
+
+
+  pJS.fn.interact.bounceParticles = function(p1, p2){
+
+    var dx = p1.x - p2.x,
+        dy = p1.y - p2.y,
+        dist = Math.sqrt(dx*dx + dy*dy),
+        dist_p = p1.radius+p2.radius;
+
+    if(dist <= dist_p){
+      p1.vx = -p1.vx;
+      p1.vy = -p1.vy;
+
+      p2.vx = -p2.vx;
+      p2.vy = -p2.vy;
+    }
+
+  }
+
+
+  /* ---------- pJS functions - modes events ------------ */
+
+  pJS.fn.modes.pushParticles = function(nb, pos){
+
+    pJS.tmp.pushing = true;
+
+    for(var i = 0; i < nb; i++){
+      pJS.particles.array.push(
+        new pJS.fn.particle(
+          pJS.particles.color,
+          pJS.particles.opacity.value,
+          {
+            'x': pos ? pos.pos_x : Math.random() * pJS.canvas.w,
+            'y': pos ? pos.pos_y : Math.random() * pJS.canvas.h
+          }
+        )
+      )
+      if(i == nb-1){
+        if(!pJS.particles.move.enable){
+          pJS.fn.particlesDraw();
+        }
+        pJS.tmp.pushing = false;
+      }
+    }
+
+  };
+
+
+  pJS.fn.modes.removeParticles = function(nb){
+
+    pJS.particles.array.splice(0, nb);
+    if(!pJS.particles.move.enable){
+      pJS.fn.particlesDraw();
+    }
+
+  };
+
+
+  pJS.fn.modes.bubbleParticle = function(p){
+
+    /* on hover event */
+    if(pJS.interactivity.events.onhover.enable && isInArray('bubble', pJS.interactivity.events.onhover.mode)){
+
+      var dx_mouse = p.x - pJS.interactivity.mouse.pos_x,
+          dy_mouse = p.y - pJS.interactivity.mouse.pos_y,
+          dist_mouse = Math.sqrt(dx_mouse*dx_mouse + dy_mouse*dy_mouse),
+          ratio = 1 - dist_mouse / pJS.interactivity.modes.bubble.distance;
+
+      function init(){
+        p.opacity_bubble = p.opacity;
+        p.radius_bubble = p.radius;
+      }
+
+      /* mousemove - check ratio */
+      if(dist_mouse <= pJS.interactivity.modes.bubble.distance){
+
+        if(ratio >= 0 && pJS.interactivity.status == 'mousemove'){
           
           /* size */
           if(pJS.interactivity.modes.bubble.size != pJS.particles.size.value){
@@ -704,7 +831,12 @@ var pJS = function(tag_id, params){
 
             if(pJS.interactivity.modes.bubble.opacity > pJS.particles.opacity.value){
               var opacity = pJS.interactivity.modes.bubble.opacity*ratio;
-              if(opacity > p.opacity && opacity <= pjs.interactivity.modes.bubble.opacity){="" p.opacity_bubble="opacity;" }="" }else{="" var="" opacity="p.opacity" -="" (pjs.particles.opacity.value-pjs.interactivity.modes.bubble.opacity)*ratio;="" if(opacity="" <="" p.opacity="" &&="">= pJS.interactivity.modes.bubble.opacity){
+              if(opacity > p.opacity && opacity <= pJS.interactivity.modes.bubble.opacity){
+                p.opacity_bubble = opacity;
+              }
+            }else{
+              var opacity = p.opacity - (pJS.particles.opacity.value-pJS.interactivity.modes.bubble.opacity)*ratio;
+              if(opacity < p.opacity && opacity >= pJS.interactivity.modes.bubble.opacity){
                 p.opacity_bubble = opacity;
               }
             }
@@ -751,7 +883,64 @@ var pJS = function(tag_id, params){
         if(bubble_param != particles_param){
 
           if(!pJS.tmp.bubble_duration_end){
-            if(dist_mouse <= pjs.interactivity.modes.bubble.distance){="" if(p_obj_bubble="" !="undefined)" var="" obj="p_obj_bubble;" else="" if(obj="" value="p_obj" -="" (time_spent="" *="" (p_obj="" bubble_param)="" pjs.interactivity.modes.bubble.duration);="" if(id="=" 'size')="" p.radius_bubble="value;" 'opacity')="" p.opacity_bubble="value;" }="" }else{="" value_tmp="p_obj" pjs.interactivity.modes.bubble.duration),="" dif="bubble_param" value_tmp;="" +="" dif;="" if(pjs.tmp.bubble_clicking){="" size="" process(pjs.interactivity.modes.bubble.size,="" pjs.particles.size.value,="" p.radius_bubble,="" p.radius,="" 'size');="" opacity="" process(pjs.interactivity.modes.bubble.opacity,="" pjs.particles.opacity.value,="" p.opacity_bubble,="" p.opacity,="" 'opacity');="" };="" pjs.fn.modes.repulseparticle="function(p){" if(pjs.interactivity.events.onhover.enable="" &&="" isinarray('repulse',="" pjs.interactivity.events.onhover.mode)="" pjs.interactivity.status="=" 'mousemove')="" {="" dx_mouse="p.x" pjs.interactivity.mouse.pos_x,="" dy_mouse="p.y" pjs.interactivity.mouse.pos_y,="" dist_mouse="Math.sqrt(dx_mouse*dx_mouse" dy_mouse*dy_mouse);="" normvec="{x:" dist_mouse,="" y:="" dist_mouse},="" repulseradius="pJS.interactivity.modes.repulse.distance," velocity="100," repulsefactor="clamp((1/repulseRadius)*(-1*Math.pow(dist_mouse/repulseRadius,2)+1)*repulseRadius*velocity," 0,="" 50);="" pos="{" x:="" p.x="" normvec.x="" repulsefactor,="" p.y="" normvec.y="" if(pjs.particles.move.out_mode="=" 'bounce'){="" if(pos.x="" p.radius=""> 0 && pos.x + p.radius < pJS.canvas.w) p.x = pos.x;
+            if(dist_mouse <= pJS.interactivity.modes.bubble.distance){
+              if(p_obj_bubble != undefined) var obj = p_obj_bubble;
+              else var obj = p_obj;
+              if(obj != bubble_param){
+                var value = p_obj - (time_spent * (p_obj - bubble_param) / pJS.interactivity.modes.bubble.duration);
+                if(id == 'size') p.radius_bubble = value;
+                if(id == 'opacity') p.opacity_bubble = value;
+              }
+            }else{
+              if(id == 'size') p.radius_bubble = undefined;
+              if(id == 'opacity') p.opacity_bubble = undefined;
+            }
+          }else{
+            if(p_obj_bubble != undefined){
+              var value_tmp = p_obj - (time_spent * (p_obj - bubble_param) / pJS.interactivity.modes.bubble.duration),
+                  dif = bubble_param - value_tmp;
+                  value = bubble_param + dif;
+              if(id == 'size') p.radius_bubble = value;
+              if(id == 'opacity') p.opacity_bubble = value;
+            }
+          }
+
+        }
+
+      }
+
+      if(pJS.tmp.bubble_clicking){
+        /* size */
+        process(pJS.interactivity.modes.bubble.size, pJS.particles.size.value, p.radius_bubble, p.radius, 'size');
+        /* opacity */
+        process(pJS.interactivity.modes.bubble.opacity, pJS.particles.opacity.value, p.opacity_bubble, p.opacity, 'opacity');
+      }
+
+    }
+
+  };
+
+
+  pJS.fn.modes.repulseParticle = function(p){
+
+    if(pJS.interactivity.events.onhover.enable && isInArray('repulse', pJS.interactivity.events.onhover.mode) && pJS.interactivity.status == 'mousemove') {
+
+      var dx_mouse = p.x - pJS.interactivity.mouse.pos_x,
+          dy_mouse = p.y - pJS.interactivity.mouse.pos_y,
+          dist_mouse = Math.sqrt(dx_mouse*dx_mouse + dy_mouse*dy_mouse);
+
+      var normVec = {x: dx_mouse/dist_mouse, y: dy_mouse/dist_mouse},
+          repulseRadius = pJS.interactivity.modes.repulse.distance,
+          velocity = 100,
+          repulseFactor = clamp((1/repulseRadius)*(-1*Math.pow(dist_mouse/repulseRadius,2)+1)*repulseRadius*velocity, 0, 50);
+      
+      var pos = {
+        x: p.x + normVec.x * repulseFactor,
+        y: p.y + normVec.y * repulseFactor
+      }
+
+      if(pJS.particles.move.out_mode == 'bounce'){
+        if(pos.x - p.radius > 0 && pos.x + p.radius < pJS.canvas.w) p.x = pos.x;
         if(pos.y - p.radius > 0 && pos.y + p.radius < pJS.canvas.h) p.y = pos.y;
       }else{
         p.x = pos.x;
@@ -800,7 +989,50 @@ var pJS = function(tag_id, params){
         }
 
         // default
-        if(d <= repulseradius){="" process();="" }="" bang="" -="" slow="" motion="" mode="" if(!pjs.tmp.repulse_finish){="" if(d="" <="repulseRadius){" }else{="" if(pjs.tmp.repulse_clicking="=" false){="" p.vx="p.vx_i;" p.vy="p.vy_i;" pjs.fn.modes.grabparticle="function(p){" if(pjs.interactivity.events.onhover.enable="" &&="" pjs.interactivity.status="=" 'mousemove'){="" var="" dx_mouse="p.x" pjs.interactivity.mouse.pos_x,="" dy_mouse="p.y" pjs.interactivity.mouse.pos_y,="" dist_mouse="Math.sqrt(dx_mouse*dx_mouse" +="" dy_mouse*dy_mouse);="" *="" draw="" a="" line="" between="" the="" cursor="" and="" particle="" if="" distance="" them="" is="" under="" config="" if(dist_mouse="" opacity_line="pJS.interactivity.modes.grab.line_linked.opacity" (dist_mouse="" (1="" pjs.interactivity.modes.grab.line_linked.opacity))="" pjs.interactivity.modes.grab.distance;="" if(opacity_line=""> 0){
+        if(d <= repulseRadius){
+          process();
+        }
+
+        // bang - slow motion mode
+        // if(!pJS.tmp.repulse_finish){
+        //   if(d <= repulseRadius){
+        //     process();
+        //   }
+        // }else{
+        //   process();
+        // }
+        
+
+      }else{
+
+        if(pJS.tmp.repulse_clicking == false){
+
+          p.vx = p.vx_i;
+          p.vy = p.vy_i;
+        
+        }
+
+      }
+
+    }
+
+  }
+
+
+  pJS.fn.modes.grabParticle = function(p){
+
+    if(pJS.interactivity.events.onhover.enable && pJS.interactivity.status == 'mousemove'){
+
+      var dx_mouse = p.x - pJS.interactivity.mouse.pos_x,
+          dy_mouse = p.y - pJS.interactivity.mouse.pos_y,
+          dist_mouse = Math.sqrt(dx_mouse*dx_mouse + dy_mouse*dy_mouse);
+
+      /* draw a line between the cursor and the particle if the distance between them is under the config distance */
+      if(dist_mouse <= pJS.interactivity.modes.grab.distance){
+
+        var opacity_line = pJS.interactivity.modes.grab.line_linked.opacity - (dist_mouse / (1/pJS.interactivity.modes.grab.line_linked.opacity)) / pJS.interactivity.modes.grab.distance;
+
+        if(opacity_line > 0){
 
           /* style */
           var color_line = pJS.particles.line_linked.color_rgb_line;
@@ -960,7 +1192,130 @@ var pJS = function(tag_id, params){
           dy = p1.y - p2.y,
           dist = Math.sqrt(dx*dx + dy*dy);
 
-      if(dist <= 2013="" p1.radius="" +="" p2.radius){="" p1.x="position" ?="" position.x="" :="" math.random()="" *="" pjs.canvas.w;="" p1.y="position" position.y="" pjs.canvas.h;="" pjs.fn.vendors.checkoverlap(p1);="" }="" };="" pjs.fn.vendors.createsvgimg="function(p){" set="" color="" to="" svg="" element="" var="" svgxml="pJS.tmp.source_svg," rgbhex="/#([0-9A-F]{3,6})/gi," coloredsvgxml="svgXml.replace(rgbHex," function="" (m,="" r,="" g,="" b)="" {="" if(p.color.rgb){="" color_value="rgba(" +p.color.rgb.r+','+p.color.rgb.g+','+p.color.rgb.b+','+p.opacity+')';="" }else{="" +p.color.hsl.h+','+p.color.hsl.s+'%,'+p.color.hsl.l+'%,'+p.opacity+')';="" return="" color_value;="" });="" prepare="" create="" img="" with="" colored="" blob([coloredsvgxml],="" {type:="" 'image="" svg+xml;charset="utf-8'})," domurl="window.URL" ||="" window.webkiturl="" window,="" url="DOMURL.createObjectURL(svg);" particle="" obj="" image();="" img.addeventlistener('load',="" function(){="" p.img.obj="img;" p.img.loaded="true;" domurl.revokeobjecturl(url);="" pjs.tmp.count_svg++;="" img.src="url;" pjs.fn.vendors.destroypjs="function(){" cancelanimationframe(pjs.fn.drawanimframe);="" canvas_el.remove();="" pjsdom="null;" pjs.fn.vendors.drawshape="function(c," startx,="" starty,="" sidelength,="" sidecountnumerator,="" sidecountdenominator){="" by="" programming="" thomas="" -="" https:="" programmingthomas.wordpress.com="" 04="" 03="" n-sided-shapes="" sidecount="sideCountNumerator" sidecountdenominator;="" decimalsides="sideCountNumerator" interiorangledegrees="(180" (decimalsides="" 2))="" decimalsides;="" interiorangle="Math.PI" math.pi="" 180;="" convert="" radians="" c.save();="" c.beginpath();="" c.translate(startx,="" starty);="" c.moveto(0,0);="" for="" (var="" i="0;" <="" sidecount;="" i++)="" c.lineto(sidelength,0);="" c.translate(sidelength,0);="" c.rotate(interiorangle);="" c.stroke();="" c.fill();="" c.restore();="" pjs.fn.vendors.exportimg="function(){" window.open(pjs.canvas.el.todataurl('image="" png'),="" '_blank');="" pjs.fn.vendors.loadimg="function(type){" pjs.tmp.img_error="undefined;" if(pjs.particles.shape.image.src="" !="" ){="" if(type="=" 'svg'){="" xhr="new" xmlhttprequest();="" xhr.open('get',="" pjs.particles.shape.image.src);="" xhr.onreadystatechange="function" (data)="" if(xhr.readystate="=" 4){="" if(xhr.status="=" 200){="" pjs.tmp.source_svg="data.currentTarget.response;" pjs.fn.vendors.checkbeforedraw();="" console.log('error="" pjs="" image="" not="" found');="" xhr.send();="" pjs.tmp.img_obj="img;" no="" image.src');="" pjs.fn.vendors.draw="function(){" if(pjs.particles.shape.type="=" 'image'){="" if(pjs.tmp.img_type="=" if(pjs.tmp.count_svg="">= pJS.particles.number.value){
+      if(dist <= p1.radius + p2.radius){
+        p1.x = position ? position.x : Math.random() * pJS.canvas.w;
+        p1.y = position ? position.y : Math.random() * pJS.canvas.h;
+        pJS.fn.vendors.checkOverlap(p1);
+      }
+    }
+  };
+
+
+  pJS.fn.vendors.createSvgImg = function(p){
+
+    /* set color to svg element */
+    var svgXml = pJS.tmp.source_svg,
+        rgbHex = /#([0-9A-F]{3,6})/gi,
+        coloredSvgXml = svgXml.replace(rgbHex, function (m, r, g, b) {
+          if(p.color.rgb){
+            var color_value = 'rgba('+p.color.rgb.r+','+p.color.rgb.g+','+p.color.rgb.b+','+p.opacity+')';
+          }else{
+            var color_value = 'hsla('+p.color.hsl.h+','+p.color.hsl.s+'%,'+p.color.hsl.l+'%,'+p.opacity+')';
+          }
+          return color_value;
+        });
+
+    /* prepare to create img with colored svg */
+    var svg = new Blob([coloredSvgXml], {type: 'image/svg+xml;charset=utf-8'}),
+        DOMURL = window.URL || window.webkitURL || window,
+        url = DOMURL.createObjectURL(svg);
+
+    /* create particle img obj */
+    var img = new Image();
+    img.addEventListener('load', function(){
+      p.img.obj = img;
+      p.img.loaded = true;
+      DOMURL.revokeObjectURL(url);
+      pJS.tmp.count_svg++;
+    });
+    img.src = url;
+
+  };
+
+
+  pJS.fn.vendors.destroypJS = function(){
+    cancelAnimationFrame(pJS.fn.drawAnimFrame);
+    canvas_el.remove();
+    pJSDom = null;
+  };
+
+
+  pJS.fn.vendors.drawShape = function(c, startX, startY, sideLength, sideCountNumerator, sideCountDenominator){
+
+    // By Programming Thomas - https://programmingthomas.wordpress.com/2013/04/03/n-sided-shapes/
+    var sideCount = sideCountNumerator * sideCountDenominator;
+    var decimalSides = sideCountNumerator / sideCountDenominator;
+    var interiorAngleDegrees = (180 * (decimalSides - 2)) / decimalSides;
+    var interiorAngle = Math.PI - Math.PI * interiorAngleDegrees / 180; // convert to radians
+    c.save();
+    c.beginPath();
+    c.translate(startX, startY);
+    c.moveTo(0,0);
+    for (var i = 0; i < sideCount; i++) {
+      c.lineTo(sideLength,0);
+      c.translate(sideLength,0);
+      c.rotate(interiorAngle);
+    }
+    //c.stroke();
+    c.fill();
+    c.restore();
+
+  };
+
+  pJS.fn.vendors.exportImg = function(){
+    window.open(pJS.canvas.el.toDataURL('image/png'), '_blank');
+  };
+
+
+  pJS.fn.vendors.loadImg = function(type){
+
+    pJS.tmp.img_error = undefined;
+
+    if(pJS.particles.shape.image.src != ''){
+
+      if(type == 'svg'){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', pJS.particles.shape.image.src);
+        xhr.onreadystatechange = function (data) {
+          if(xhr.readyState == 4){
+            if(xhr.status == 200){
+              pJS.tmp.source_svg = data.currentTarget.response;
+              pJS.fn.vendors.checkBeforeDraw();
+            }else{
+              console.log('Error pJS - Image not found');
+              pJS.tmp.img_error = true;
+            }
+          }
+        }
+        xhr.send();
+
+      }else{
+
+        var img = new Image();
+        img.addEventListener('load', function(){
+          pJS.tmp.img_obj = img;
+          pJS.fn.vendors.checkBeforeDraw();
+        });
+        img.src = pJS.particles.shape.image.src;
+
+      }
+
+    }else{
+      console.log('Error pJS - No image.src');
+      pJS.tmp.img_error = true;
+    }
+
+  };
+
+
+  pJS.fn.vendors.draw = function(){
+
+    if(pJS.particles.shape.type == 'image'){
+
+      if(pJS.tmp.img_type == 'svg'){
+
+        if(pJS.tmp.count_svg >= pJS.particles.number.value){
           pJS.fn.particlesDraw();
           if(!pJS.particles.move.enable) cancelRequestAnimFrame(pJS.fn.drawAnimFrame);
           else pJS.fn.drawAnimFrame = requestAnimFrame(pJS.fn.vendors.draw);
@@ -1183,4 +1538,4 @@ window.particlesJS.load = function(tag_id, path_config_json, callback){
   };
   xhr.send();
 
-};</=></=></=></=></=></=></=></=>
+};
