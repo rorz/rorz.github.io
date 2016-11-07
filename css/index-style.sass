@@ -1,0 +1,52 @@
+// First Imports
+@import 'https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900|Righteous'
+// Variables
+$family-serif:"Lato", serif
+$family-primary:$family-serif
+$green:#35AE7A
+$primary:$green
+// Custom Classes
+.sticky
+  position:-webkit-sticky
+  position:sticky
+.hero-head
+  z-index: 1000
+// Typed.js
+.typed-cursor
+  opacity: 1
+  -webkit-animation: blink 0.7s infinite
+  -moz-animation: blink 0.7s infinite
+  animation: blink 0.7s infinite
+@keyframes blink
+  0%
+    opacity: 1
+
+  50%
+    opacity: 0
+
+  100%
+    opacity: 1
+
+
+@-webkit-keyframes blink
+  0%
+    opacity: 1
+
+  50%
+    opacity: 0
+
+  100%
+    opacity: 1
+
+
+@-moz-keyframes blink
+  0%
+    opacity: 1
+
+  50%
+    opacity: 0
+
+  100%
+    opacity: 1
+// Bulma Import
+@import "bulma/bulma.sass"
